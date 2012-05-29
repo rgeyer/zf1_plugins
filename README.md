@@ -84,6 +84,19 @@ $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
 ));
 ```
 
+This should also result in your ~/public/index.php file changing to the following
+
+~/public/index.php
+```php
+<?php
+
+require_once __DIR__ . '/../application/scripts/bootstrapEnvironment.php';
+
+// $application is instantiated in bootstrapEnvironment above
+$application->bootstrap()
+            ->run();
+```            
+
 # Plugins
 
 ## Controller
