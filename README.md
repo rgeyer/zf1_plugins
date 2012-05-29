@@ -12,6 +12,78 @@ If you're using some other VCS just grab these files and put them under ~/librar
 
 You can then follow the directions for each plugin below to include them.
 
+# Resources
+
+## Doctrine 2
+
+### Entity Manager
+
+#### Usage
+Add the following to your application.ini
+
+```ini
+; Doctrine 2 Integration
+autoloadernamespaces[] = "RGeyer_"
+autoloadernamespaces[] = "Doctrine"
+autoloadernamespaces[] = "Symfony"
+pluginPaths.RGeyer_Resource_ = "RGeyer/Resource"
+
+resources.entitymanager.modelDir = APPLICATION_PATH "/models/"
+resources.entitymanager.proxyDir = APPLICATION_PATH "/proxies/"
+resources.entitymanager.proxyNamespace = "Application_Proxies"
+resources.entitymanager.autoGenerateProxyClasses = true
+
+;resources.entitymanager.connection.driver = "pdo_pgsql"
+;resources.entitymanager.connection.user = "namedepotcore"
+;resources.entitymanager.connection.password = "powerbrand"
+;resources.entitymanager.connection.host = "127.0.0.1"
+;resources.entitymanager.connection.dbname = "tms_app"
+
+resources.entitymanager.connection.driver = "pdo_sqlite"
+resources.entitymanager.connection.path = APPLICATION_PATH "/../database/database.sqlite"
+```
+
+In order to use the doctrine commandline tool, you'll need to create a cli-config.php file which bootstraps the ZendFramework application, and the Doctrine Entity Manager.  You'll find an example of that below
+
+~/application/scripts/bootstrapEnvironment.php
+```php
+// Define path to application directory
+defined('APPLICATION_PATH')
+|| define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application'));
+
+// Define application environment
+defined('APPLICATION_ENV')
+|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+
+// Ensure library/ is on include_path
+set_include_path(implode(PATH_SEPARATOR, array(
+    realpath(APPLICATION_PATH . '/../library'),
+    get_include_path(),
+)));
+
+/** Zend_Application */
+require_once 'Zend/Application.php';
+
+// Create application, bootstrap, and run
+$application = new Zend_Application(
+    APPLICATION_ENV,
+    APPLICATION_PATH . '/configs/application.ini'
+);
+```
+
+~/application/scripts/cli-config.php
+```php
+require_once __DIR__ . '/bootstrapEnvironment.php';
+
+// $application is instantiated in bootstrapEnvironment above
+$bootstrap = $application->getBootstrap()->bootstrap('entityManager');
+$em = $bootstrap->getResource('entityManager');
+
+$helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
+  'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($em)
+));
+```
+
 # Plugins
 
 ## Controller
