@@ -38,5 +38,21 @@ autoloadernamespaces[] = "RGeyer_"
 resources.frontController.plugins.WebSessionLogger = 'RGeyer_Controller_Plugin_WebSessionLogger'
 ```
 
+Here's some example output
+
+```log
+2012-05-28T23:44:59+00:00 INFO (bd52996fda8556ecb2ece72d648c1f99faa9f0bc): Request started for anonymous 
+2012-05-28T23:45:00+00:00 INFO (d5c8b503e9706e71e54ab21126daab0c393aed4a): Request started for anonymous 
+2012-05-28T23:45:00+00:00 INFO (d5c8b503e9706e71e54ab21126daab0c393aed4a): Request started for anonymous 
+2012-05-28T23:45:00+00:00 NOTICE (d5c8b503e9706e71e54ab21126daab0c393aed4a): Page not found exception 'Zend_Controller_Dispatcher_Exception' with message 'Invalid controller specified (favicon.ico)' in /Applications/XAMPP/xamppfiles/lib/php/pear/Zend/Controller/Dispatcher/Standard.php:248
+Stack trace:
+#0 /Applications/XAMPP/xamppfiles/lib/php/pear/Zend/Controller/Front.php(954): Zend_Controller_Dispatcher_Standard->dispatch(Object(Zend_Controller_Request_Http), Object(Zend_Controller_Response_Http))
+#1 /Applications/XAMPP/xamppfiles/lib/php/pear/Zend/Application/Bootstrap/Bootstrap.php(97): Zend_Controller_Front->dispatch()
+#2 /Applications/XAMPP/xamppfiles/lib/php/pear/Zend/Application.php(366): Zend_Application_Bootstrap_Bootstrap->run()
+#3 /Users/ryangeyer/Code/PHP/zf_base/public/index.php(26): Zend_Application->run()
+#4 {main}
+2012-05-28T23:45:00+00:00 NOTICE (d5c8b503e9706e71e54ab21126daab0c393aed4a): Request Parameters
+```
+
 # TODO
 Probably rename this zf1_goodies to more accurately reflect the fact that it's plugins, resources, and all sorts of other goodies
