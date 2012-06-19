@@ -22,7 +22,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// Effectively copy pasted from https://github.com/SpiffyJr/zfd2_tutorial
+// Effectively copy pasted from https://github.com/SpiffyJr/zfd2_tutorial, with the addition of loading all models
 class RGeyer_Resource_Entitymanager extends Zend_Application_Resource_ResourceAbstract
 {
 	protected $_options = array(
@@ -37,10 +37,31 @@ class RGeyer_Resource_Entitymanager extends Zend_Application_Resource_ResourceAb
 		'proxyNamespace' => 'Proxies',
 		'autoGenerateProxyClasses' => true
 	);
+	
+	protected function loadAllModels($modelDir) {
+		if(is_array($modelDir)) {
+			foreach($modelDir as $dir) {
+				$this->loadAllModels($modelDir);
+			}
+		} else {
+			foreach(scandir($modelDir) as $modelFile) {
+				$fullpath = $modelDir . '/' . $modelFile;
+				if(is_file($fullpath) && preg_match("/\.php$/", $fullpath)) {
+					require_once $fullpath;
+				}
+				
+				if(!preg_match("/^\.{1,2}/", $modelFile) && is_dir($fullpath)) {
+					$this->loadAllModels($fullpath);
+				}
+			}
+		}
+	}
 
 	public function init()
 	{
 		$options = $this->getOptions();
+		
+		$this->loadAllModels($options['modelDir']);
 		
 		$config = new \Doctrine\ORM\Configuration;
 		$cache = new \Doctrine\Common\Cache\ArrayCache;
